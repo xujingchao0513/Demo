@@ -1,0 +1,91 @@
+server:
+  port: 8820
+  servlet:
+    context-parameters:
+      enable: true
+      maxShowParam: 1
+      minTime: -1
+tsf:
+  swagger:
+    enabled: false
+spring:
+  application:
+    name: custbasic-info-manage
+  messages:
+    basename: i18n/defalultMessages,i18n/messages,i18n/exception
+    encoding: UTF-8 #设定Message bundles的编码，默认: UTF-8
+  profiles:
+    active: dev
+  cloud:
+    #    consul:
+    #      discovery:
+    #        acl-token: 4efb1523-76a3-f476-e6d8-452220593089
+    #        enabled: true
+    #        health-check-interval: 10s
+    #        hostname: your_host
+    #        instance-id: ${spring.application.name}-${random.value}
+    #        ip-address: 127.0.0.1
+    #        port: 8500
+    #        prefer-ip-address: false
+    config:
+      profile: dev
+    loadbalancer:
+      retry:
+        enabled: true
+
+  datasource:
+#    driver-class-name: org.postgresql.Driver
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+#    username: postgres
+#    password: 8824091
+#    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:log4jdbc:postgresql://localhost:5432/postgres
+    hikari: # springboot 2.0 整合了hikari ,据说这是目前性能最好的java数据库连接池
+      username: postgres
+      password: 8824091
+      minimum-idle: 5  # 最小空闲连接数量
+      idle-timeout: 180000 # 空闲连接存活最大时间，默认600000（10分钟）
+      maximum-pool-size: 10 # 连接池最大连接数,默认是10
+      auto-commit: true # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+      pool-name: MyHikariCP # 连接池名称
+      max-lifetime: 1800000 # 此属性控制池中连接的最长生命周期,值0表示无限生命周期,默认1800000即30分钟
+      connection-timeout: 30000 # 数据库连接超时时间,默认30秒,即30000
+
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+#    show-sql: true     #打印sql 1级
+#    format_sql: true
+#    use_sql_comments: true
+###打印sql 带参数 2级
+#logging:
+#  level:
+#    org.springframework.security:
+#      - debug
+#      - info
+#    org.springframework.web: error
+#    org.hibernate.SQL: debug
+#    org.hibernate.engine.QueryParameters: debug
+#    org.hibernate.engine.query.HQLQueryPlan: debug
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+j2cache:
+  config-location: j2cache.properties
+  L1:
+    provider_class: caffeine
+  l2-cache-open: true #是否开启两级缓存框架的第二级
+  open-spring-cache: true
+  serialization: fst #json
+
+#配置2级缓存的第1级
+caffeine:
+  region:
+    default: 1000,1h
+#配置2级缓存的第2级
+#redis:
+#  hosts: localhost:6379
+#  mode: single
+#  password: admin
